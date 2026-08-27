@@ -23,7 +23,7 @@ st.set_page_config(
 # title and header
 
 st.title("Thermal Adaptive Cooling System")
-st.subheader("Real-Time Thermal Cooling Dashboard")
+st.subheader("Real Time Thermal Cooling Dashboard")
 
 # col1 , col2 = st.columns([1 , 2])
 # with col2:
