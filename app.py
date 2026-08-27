@@ -203,7 +203,7 @@ with tab1:
         )
 
         fig.add_trace(
-            go.bar(
+            go.Bar(
                 x = data['timestamp'],
                 y = data['fan_speed'],
                 name="Fan Speed",
@@ -222,11 +222,11 @@ with tab1:
             ),
             secondary_y=True
         )
-        fig.apdate_layout(
+        fig.update_layout(
             title="Pump & Fan Response to temperature Changes",
             hovermode='x unified',
             height = 500,
-            template ='Plotly_white'
+            template='plotly_white'
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -245,7 +245,7 @@ with tab1:
             fig = px.area(
                 data,
                 x = 'timestamp',
-                y = 'power_comsumption',
+                y = 'power_consumption',
                 title="Coolong Power Consumption(24 Hours)",
                 labels ={'power_consumption': 'Power (w)', 'timestamp':'Time'}
             )
@@ -255,9 +255,68 @@ with tab1:
                 line_color ="red",
                 annotation_text = "Baseline (100% continuous): 140W"
             )
-            
+            fig.update_layout(
+                hovermode='x unified',
+                height = 500,
+                template ='plotly_white'
+            )
+            st.plotly_chart(fig,use_container_width=True)
 
+            st.write("Power Consumption Statistics")
+            baseline_power= 140
+            col1, col2, col3, col4= st.columns(4)
+            avg_power =data['power_consumption'].mean()
+            with col1:
+                st.metric("Avg Power", f"{avg_power:.1f}W")
+            with col2:
+                st.metric("Baseline(100%)", f"{baseline_power:.0f}W")
+            with col3:
+                savings_percent = (1 - avg_power/baseline_power)*100
+                st.metric("Savings", f"{savings_percent:.0f}%")
+            with col4:
+                daily_Kwh= (avg_power * 24) / 1000
+                st.metric("Daily Usage", f"{daily_Kwh:.2f}kWh")
 
+        with tab4:
+            fig = px.line(
+                data,
+                x = 'timestamp',
+                y = 'efficiency',
+                title = "System Efficiency (24 Hours)",
+                labels ={'efficiency': 'Efficiency(%)', 'timestamp':'Time'}
+            )
+            fig.add_hline(
+                y = 35,
+                line_dash="dash",
+                line_color = "blue",
+                annotation_text = "baseline: 35%"
+            )
+            fig.add_hrect(
+                y0 = 60,
+                y1 = 100,
+                fillcolor ="green",
+                opacity = 0.1,
+                annotation_text="Excellent"
+            )
+            fig.update_layout(
+                hovermode='x unified',
+                height = 500,
+                template='plotly_white'
+            )
+            st.plotly_chart(fig,use_container_width=True)
+
+            st.write("Efficiency Statistics")
+            col1, col2, col3, col4= st.columns(4)
+            with col1:
+                st.metric("Avg Efficiency", f"{data['efficiency'].mean():.0f}%")
+            with col2:
+                st.metric("Min Efficiency", f"{data['efficiency'].min():.0f}%")
+            with col3:
+                st.metric("Max Efficiency", f"{data['efficiency'].max():.0f}%")
+            with col4:
+                improvement =data['efficiency'].mean() -35
+                st.metric("vs Baseline", f"{improvement:.0f}%")
+                
 
 #footer
 st.markdown("---") 
