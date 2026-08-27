@@ -1,4 +1,6 @@
 # pyrefly: ignore [missing-import]
+from pandas._libs import indexing
+# pyrefly: ignore [missing-import]
 import streamlit as st 
 import pandas as pd 
 # pyrefly: ignore [missing-import]
@@ -132,12 +134,131 @@ else:
 st.markdown("--- ")
 
 #sample chart
-st.subheader("Temperature Trend(Sample)")
+st.subheader("System Performance Trend")
+tab1, tab2, tab3, tab4 = st.tabs(["Temperature", "Control Response", "Power Usage", "Efficiency"]) 
+with tab1:
+    fig = px.line(
+        data,
+        x ='timestamp',
+        y = 'temperature',
+        title = "Temperature Trend (24 Hours)",
+        labels={'temperature': 'Temperature(°C)','timestamp': 'Time'},
+        line_shape = 'linear'
+    )
 
-fig = px.line(data, x='timestamp', y ='temperature', title= "Tempearature History(24 hours)", labels={'temperature': 'Temperature(°C)', 'timestamp': 'Time'})
-fig.add_hline(y=40, line_dash="dash", line_color="green", annotation_text="Target: 40°C")
-st.plotly_chart(fig, use_container_width=True)
-st.success("Basic layout Complete! Next step: Generate full demo data")
+    fig.add_hline(
+        y = 40,
+        line_dash ="dash",
+        line_color = "green",
+        annotation_text = "target: 40°C"
+    )
+    fig.add_hrect(
+        y0 = 45,
+        y1 = 50,
+        fillcolor = "orange",
+        opacity = 0.1,
+        annotation_text ="Warning Zone"
+    )
+    fig.add_hrect(
+        y0 = 50,
+        y1 = 55,
+        fillcolor = "red",
+        opacity = 0.1,
+        annotation_text ="Critical Zone"
+    )
+    fig.update_layout(
+        hovermode='x unified',
+        height = 500,
+        template='plotly_white'
+    )
+    st.plotly_chart (fig, use_container_width=True)
+
+    st.write("Temperature Statistics")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Average", f"{data['temperature'].mean():.1f}°C")
+    with col2:
+        st.metric("Minimum", f"{data['temperature'].min():.1f}°C")
+    with col3:
+        st.metric("Maximum", f"{data['temperature'].max():.1f}°C")
+    with col4:
+        st.metric("Std Dev", f"{data['temperature'].mean():.1f}°C")
+
+
+    with tab2:
+        fig = make_subplots( 
+            specs=[[{"secondary_y": True}]], 
+            subplot_titles=("Pump & Fan Speed vs Temperature",) 
+        )
+    # Pump speed 
+        fig.add_trace( 
+            go.Bar( 
+            x=data['timestamp'],  
+            y=data['pump_speed'],  
+            name="Pump Speed %", 
+            marker_color='blue',  
+            opacity=0.6 
+            ),
+            secondary_y=False 
+        )
+
+        fig.add_trace(
+            go.bar(
+                x = data['timestamp'],
+                y = data['fan_speed'],
+                name="Fan Speed",
+                marker_color ='orange',
+                opacity = 0.6
+            ),
+            secondary_y = False
+        )
+        fig.add_trace(
+            go.Scatter(
+                x = data['timestamp'],
+                y = data['temperature'],
+                name ="Temperature(°C)",
+                line=dict(color='red', width=3),
+                mode ='lines'
+            ),
+            secondary_y=True
+        )
+        fig.apdate_layout(
+            title="Pump & Fan Response to temperature Changes",
+            hovermode='x unified',
+            height = 500,
+            template ='Plotly_white'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+        st.write("Control Response Statistics")
+        col1, col2, col3, col4= st.columns(4)
+        with col1:
+            st.metric("Avg Pump Speed", f"{data['pump_speed'].mean():.0f}%")
+        with col2:
+            st.metric("Avg Fan Speed", f"{data['fan_speed'].mean():.0f}%")
+        with col3:
+            st.metric("Max Pump", f"{data['pump_speed'].max():.0f}%")
+        with col4:
+            st.metric("max Fan", f"{data['fan_speed'].max():.0f}%")
+
+        with tab3:
+            fig = px.area(
+                data,
+                x = 'timestamp',
+                y = 'power_comsumption',
+                title="Coolong Power Consumption(24 Hours)",
+                labels ={'power_consumption': 'Power (w)', 'timestamp':'Time'}
+            )
+            fig.add_hline(
+                y = 140,
+                line_dash="dash",
+                line_color ="red",
+                annotation_text = "Baseline (100% continuous): 140W"
+            )
+            
+
+
+
 #footer
 st.markdown("---") 
 st.markdown(""" 
