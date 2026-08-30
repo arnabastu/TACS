@@ -133,6 +133,7 @@ else:
     st.success("System Status: All metrics normal")
 st.markdown("--- ")
 
+
 #sample chart
 st.subheader("System Performance Trend")
 tab1, tab2, tab3, tab4 = st.tabs(["Temperature", "Control Response", "Power Usage", "Efficiency"]) 
