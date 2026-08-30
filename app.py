@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 # page configuration
 st.set_page_config(
     page_title = "Thermal Adaptive Cooling System - TACS",
-    page_icon = "favicon.ico",
+    page_icon = "favicon.png",
     layout= "wide",
     initial_sidebar_state = "collapsed"
 )
