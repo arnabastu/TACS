@@ -488,6 +488,8 @@ st.sidebar.markdown("""
 
 **Tech Stack**\n
 - Frontend: Streamlit\n
+- Backend: FastAPI & WebSocket\n
+- Database: Supabase/PostgreSQL\n
 - Data: Pandas\n
 - Visualzation: Plotly\n
 """)
