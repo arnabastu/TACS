@@ -19,7 +19,6 @@ st.set_page_config(
     layout= "wide",
     initial_sidebar_state = "collapsed"
 )
-
 # title and header
 
 st.title("Thermal Adaptive Cooling System")
@@ -64,6 +63,7 @@ st.sidebar.info(f"**Current:** {scenario}\n\n**Status:** Simulating cooling resp
 # )
 # st.sidebar.info(f"Showing data for: {time_range}")
 #temporary data 
+
 @st.cache_data
 def load_scenario_data(scenario_name): 
     """Load demo data for selected scenario""" 
