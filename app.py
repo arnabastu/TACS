@@ -14,10 +14,10 @@ from datetime import datetime, timedelta
 
 # page configuration
 st.set_page_config(
-    page_title = "TACS",
-    page_icon = ":dash:",
+    page_title = "Thermal Adaptive Cooling System - TACS",
+    page_icon = "favicon.ico",
     layout= "wide",
-    initial_sidebar_state = "expanded"
+    initial_sidebar_state = "collapsed"
 )
 
 # title and header
@@ -56,13 +56,13 @@ scenario = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.subheader("Scenerio Details")
 st.sidebar.info(f"**Current:** {scenario}\n\n**Status:** Simulating cooling response\n\n**Duration:** 24hours")
-st.sidebar.markdown("---")
-st.sidebar.subheader("Time Period")
-time_range = st.sidebar.selectbox(
-    "Select Time Range:",
-    ("24 Hours", "7 Days(Stimulated)","30 Days(Simulated)")
-)
-st.sidebar.info(f"Showing data for: {time_range}")
+# st.sidebar.markdown("---")
+# st.sidebar.subheader("Time Period")
+# time_range = st.sidebar.selectbox(
+#     "Select Time Range:",
+#     ("24 Hours", "7 Days(Stimulated)","30 Days(Simulated)")
+# )
+# st.sidebar.info(f"Showing data for: {time_range}")
 #temporary data 
 @st.cache_data
 def load_scenario_data(scenario_name): 
@@ -103,8 +103,8 @@ latest_efficiency = data['efficiency'].iloc[-1]
 with col1:
     st.metric(
         label="Temperature",
-        value=f"{latest_temp:.1f}C", # degree celsius
-        delta=f"{latest_temp - 40:.1f}C from target"  # degree celsius
+        value=f"{latest_temp:.1f}°C", 
+        delta=f"{latest_temp - 40:.1f}°C from target"  
     )
 with col2:
     st.metric(
@@ -128,7 +128,7 @@ with col4:
 if latest_temp > 50:
     st.error("Critical: Tempearture abouve 50°C!")
 elif latest_temp > 45:
-    st.warning("WARNING: Tempearture abouve 45°C")
+    st.warning("WARNING: Tempearture abouve 45°C!")
 else:
     st.success("System Status: All metrics normal")
 st.markdown("--- ")
@@ -190,7 +190,7 @@ with tab1:
             specs=[[{"secondary_y": True}]], 
             subplot_titles=("Pump & Fan Speed vs Temperature",) 
         )
-    # Pump speed 
+# Pump speed 
         fig.add_trace( 
             go.Bar( 
             x=data['timestamp'],  
@@ -396,10 +396,10 @@ comparison_data = {
         f'{2.0:.2f} kg/day', 
         f"₹{3.36*30*electricity_rate:.0f}" 
     ], 
-    'Adaptive System (Your Design)': [ 
+    'TACS': [ 
         f"{data['temperature'].mean():.1f}°C", 
         '±2°C', 
-        '4-6 sec', 
+        '4-6 sec',
         f'{actual_daily_kwh:.2f} kWh', 
         f"{data['efficiency'].mean():.0f}%", 
         '50%', 
@@ -463,6 +463,7 @@ fig_roi = px.line(
     title='ROI Timeline - When Does Investment Pay Back?', 
     labels={'value': 'Amount (₹)', 'Month': 'Months'} 
 ) 
+
 # Find breakeven point 
 breakeven_month = investment / monthly_savings_rupees 
 fig_roi.add_vline( 
@@ -477,7 +478,18 @@ st.info(f"""
 - Monthly Savings: ₹{monthly_savings_rupees:.0f} - Payback Period: {payback_months:.1f} months ({payback_months/12:.1f} years) - 2-Year Total Savings: ₹{annual_savings_rupees*2:.0f} - 5-Year Total Savings: ₹{annual_savings_rupees*5:.0f} 
 """) 
 st.markdown("---")        
+#credit
+st.sidebar.markdown("---")
+st.sidebar.markdown("""
+**Version:** 1.0\n
+**Created By:** Team Orbiora\n
+**Project:** Thermal Adaptive Cooling System\n
 
+**Tech Stack**\n
+- Frontend: Streamlit\n
+- Data: Pandas\n
+- Visualzation: Plotly\n
+""")
 #footer
 st.markdown("---") 
 st.markdown(""" 
