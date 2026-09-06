@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
-# Page configuration
 st.set_page_config(
     page_title="Thermal Adaptive Cooling System - TACS",
     page_icon="favicon.png",
