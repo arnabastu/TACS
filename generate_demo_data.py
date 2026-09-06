@@ -6,7 +6,6 @@ import pandas as pd
 
 
 def normalize_scenario_name(scenario_name):
-    """Accept both short names and UI labels used by the dashboard."""
     if scenario_name is None:
         raise ValueError("Scenario name cannot be null.")
 
@@ -32,7 +31,6 @@ def normalize_scenario_name(scenario_name):
 
 
 def generate_scenario_data(scenario_name, hours=24, sample_rate_minutes=5):
-    """Generate realistic demo data for a cooling scenario."""
     scenario_key = normalize_scenario_name(scenario_name)
     num_points = int((hours * 60) / sample_rate_minutes)
     start_time = datetime(2024, 8, 24, 0, 0, 0)
